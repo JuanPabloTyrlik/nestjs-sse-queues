@@ -1,0 +1,9 @@
+<script type="text/javascript">
+  const eventSource = new EventSource('/async-job/sse');
+  eventSource.onmessage = ({ data, lastEventId }) => {
+    console.log(data);
+    const message = document.createElement('li');
+    message.innerText = `ID: ${lastEventId} - New message: ${data}`;
+    document.body.appendChild(message);
+  };
+</script>
