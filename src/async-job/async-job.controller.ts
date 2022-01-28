@@ -5,18 +5,17 @@ import {
   MessageEvent,
   Post,
   Query,
-  Sse
+  Sse,
 } from '@nestjs/common';
 import Bull, { Job, Queue } from 'bull';
 import { EventEmitter2 } from 'eventemitter2';
+import { distinctUntilChanged, fromEvent, map, merge, Observable } from 'rxjs';
 import {
-  distinctUntilChanged,
-  fromEvent,
-  map,
-  merge,
-  Observable
-} from 'rxjs';
-import { JOB_ACTIVE, JOB_COMPLETED, JOB_PROGRESS, QUEUE_NAME } from 'src/constants';
+  JOB_ACTIVE,
+  JOB_COMPLETED,
+  JOB_PROGRESS,
+  QUEUE_NAME,
+} from 'src/constants';
 
 @Controller('async-job')
 export class AsyncJobController {
@@ -32,7 +31,7 @@ export class AsyncJobController {
 
   @Post('process')
   async queueJob(): Promise<Bull.Job<any>> {
-    return this.queue.add({some: 'info'});
+    return this.queue.add({ some: 'info' });
   }
 
   @Sse('sse')
@@ -43,7 +42,10 @@ export class AsyncJobController {
 
     return merge(
       activeJobListener$.pipe(
-        map((job: Job) => ({ type: JOB_ACTIVE, data: `Job ${job.id} is active` })),
+        map((job: Job) => ({
+          type: JOB_ACTIVE,
+          data: `Job ${job.id} is active`,
+        })),
       ),
       jobProgressListener$.pipe(
         distinctUntilChanged(({ progress: a }, { progress: b }) => a === b),

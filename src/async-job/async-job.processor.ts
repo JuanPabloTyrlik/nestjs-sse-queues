@@ -4,7 +4,7 @@ import {
   OnQueueError,
   OnQueueProgress,
   Process,
-  Processor
+  Processor,
 } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -14,7 +14,7 @@ import {
   JOB_COMPLETED,
   JOB_ERROR,
   JOB_PROGRESS,
-  QUEUE_NAME
+  QUEUE_NAME,
 } from 'src/constants';
 
 @Processor(QUEUE_NAME)

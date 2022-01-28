@@ -1,6 +1,7 @@
 <script type="text/javascript">
   const eventSource = new EventSource('/async-job/sse'); // Establish a connection
-  const logMessages = ({ data, type, lastEventId }) => { // Listens to messages
+  const logMessages = ({ data, type, lastEventId }) => {
+    // Listens to messages
     console.log(data);
     const message = document.createElement('li');
     message.innerText = `ID: ${lastEventId} - Type: ${type} - New message: ${data}`;

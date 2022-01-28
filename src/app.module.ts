@@ -15,6 +15,6 @@ import { AsyncJobModule } from './async-job/async-job.module';
     AsyncJobModule,
     EventEmitterModule.forRoot(),
   ],
-  controllers: [AppController]
+  controllers: [AppController],
 })
 export class AppModule {}
