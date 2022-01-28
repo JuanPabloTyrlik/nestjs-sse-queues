@@ -6,7 +6,7 @@ import { resolve } from 'path';
 @Controller()
 export class AppController {
   @Get()
-  index(@Res() response: Response) {
+  index(@Res() response: Response): void {
     response
       .type('text/html')
       .send(

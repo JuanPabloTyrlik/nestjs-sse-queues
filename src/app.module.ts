@@ -9,12 +9,12 @@ import { AsyncJobModule } from './async-job/async-job.module';
     BullModule.forRoot({
       redis: {
         host: 'localhost',
-        port: 6379,
+        port: 6381,
       },
     }),
     AsyncJobModule,
     EventEmitterModule.forRoot(),
   ],
-  controllers: [AppController],
+  controllers: [AppController]
 })
 export class AppModule {}

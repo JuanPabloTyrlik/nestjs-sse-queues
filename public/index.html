@@ -1,9 +1,21 @@
 <script type="text/javascript">
-  const eventSource = new EventSource('/async-job/sse');
-  eventSource.onmessage = ({ data, lastEventId }) => {
+  const eventSource = new EventSource('/async-job/sse'); // Establish a connection
+  const logMessages = ({ data, type, lastEventId }) => { // Listens to messages
     console.log(data);
     const message = document.createElement('li');
-    message.innerText = `ID: ${lastEventId} - New message: ${data}`;
+    message.innerText = `ID: ${lastEventId} - Type: ${type} - New message: ${data}`;
     document.body.appendChild(message);
   };
+  eventSource.addEventListener('job-active', logMessages);
+  eventSource.addEventListener('job-progress', logMessages);
+  eventSource.addEventListener('job-completed', logMessages);
+  eventSource.addEventListener('job-error', logMessages);
+
+  // Close the connection
+
+  // eventSource.removeEventListener('job-active', logMessages);
+  // eventSource.removeEventListener('job-progress', logMessages);
+  // eventSource.removeEventListener('job-completed', logMessages);
+  // eventSource.removeEventListener('job-error', logMessages);
+  // eventSource.close()
 </script>

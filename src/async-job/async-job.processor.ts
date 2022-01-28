@@ -4,25 +4,26 @@ import {
   OnQueueError,
   OnQueueProgress,
   Process,
-  Processor,
+  Processor
 } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
-import { Job } from 'bull';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Job } from 'bull';
 import {
   JOB_ACTIVE,
   JOB_COMPLETED,
   JOB_ERROR,
   JOB_PROGRESS,
+  QUEUE_NAME
 } from 'src/constants';
 
-@Processor('async-job')
+@Processor(QUEUE_NAME)
 export class AsyncJobProcessor {
   private readonly logger = new Logger(AsyncJobProcessor.name);
 
   constructor(private eventEmitter: EventEmitter2) {}
 
-  @Process('queue-job')
+  @Process()
   async handleJobProcess(job: Job): Promise<string> {
     this.logger.debug('Processing request...');
     this.logger.debug(job.data);
@@ -42,26 +43,26 @@ export class AsyncJobProcessor {
     };
 
     await loop();
-    this.logger.debug('Proccess completed');
+    this.logger.debug('Process completed');
     return 'Job Completed';
   }
 
   @OnQueueActive()
-  handleActiveJob(job: Job) {
+  handleActiveJob(job: Job): void {
     // Job has started
     this.logger.log(`Job ${job.id} has started`);
     this.eventEmitter.emit(JOB_ACTIVE, job);
   }
 
   @OnQueueProgress()
-  handleJobProgress(job: Job, progress: number) {
+  handleJobProgress(job: Job, progress: number): void {
     // Job progress has been updated to `progress`
     this.logger.log(`Job ${job.id} has progressed to ${progress}`);
     this.eventEmitter.emit(JOB_PROGRESS, { job, progress });
   }
 
   @OnQueueCompleted()
-  handleJobCompleted(job: Job, result: any) {
+  handleJobCompleted(job: Job, result: unknown): void {
     // Job has finished processing
     this.logger.log(
       `Job ${job.id} has finished processing and yielded the result '${result}'`,
@@ -70,7 +71,7 @@ export class AsyncJobProcessor {
   }
 
   @OnQueueError()
-  handleError(error: Error) {
+  handleError(error: Error): void {
     this.logger.log("There's been an error");
     this.eventEmitter.emit(JOB_ERROR, { error });
   }
